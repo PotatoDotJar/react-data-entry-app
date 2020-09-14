@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { Container } from 'react-bootstrap';
 
+import Header from './components/Header';
 import DataLog from './components/DataLog';
 import DataEntry from './components/DataEntry';
 
@@ -14,11 +15,13 @@ class App extends React.Component {
 		this.state = {
 			currentView: "DataLog"
 		};
+
+		this.setCurrentPage = this.setCurrentPage.bind(this);
 	}
 
-	// setCurrentView(currentView) {
-	// 	this.setState()
-	// }
+	setCurrentPage(newPage) {
+		this.setState({ currentPage: newPage });
+	}
 
 	render() {
 
@@ -36,9 +39,13 @@ class App extends React.Component {
 		}
 
 		return (
-			<Container>
-				{currentPage}
-			</Container>
+			<div>
+				<Header currentPage={currentPage} setCurrentPage={this.setCurrentPage} />
+				<Container>
+					{currentPage}
+				</Container>
+			</div>
+			
 		);
 	}
 }

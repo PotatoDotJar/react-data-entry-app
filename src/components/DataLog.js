@@ -1,10 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { Button, Col, Row, Nav } from 'react-bootstrap';
+
 class DataLog extends React.Component {
 
 	constructor(props) {
 		super(props);
+	}
+
+
+	componentDidMount() {
+		console.log("Did mount");
+	}
+
+	componentWillUnmount() {
+		console.log("Will unmount");
 	}
 
 
