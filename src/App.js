@@ -7,45 +7,48 @@ import Header from './components/Header';
 import DataLog from './components/DataLog';
 import DataEntry from './components/DataEntry';
 
+const CurrentPageContext = React.createContext('DataLog');
+
+
 class App extends React.Component {
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			currentView: "DataLog"
+			currentPage: "DataLog"
 		};
 
 		this.setCurrentPage = this.setCurrentPage.bind(this);
 	}
 
 	setCurrentPage(newPage) {
+		console.log(newPage);
 		this.setState({ currentPage: newPage });
 	}
 
 	render() {
 
-		const currentView = this.state.currentView;
+		const _currentPage = this.state.currentPage;
 		let currentPage;
 
-		if(currentView === "DataLog") {
+		if(_currentPage === "DataLog") {
 			currentPage = <DataLog />;
 		}
-		else if(currentView === "DataEntry") {
+		else if(_currentPage === "DataEntry") {
 			currentPage = <DataEntry />
 		}
 		else {
-			currentPage = <h1 className="error">Invalid State</h1>;
+			currentPage = <h1 className="color-error">Invalid State</h1>;
 		}
 
 		return (
-			<div>
+			<CurrentPageContext.Provider value={_currentPage}>
 				<Header currentPage={currentPage} setCurrentPage={this.setCurrentPage} />
 				<Container>
 					{currentPage}
 				</Container>
-			</div>
-			
+			</CurrentPageContext.Provider>			
 		);
 	}
 }
