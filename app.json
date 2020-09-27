@@ -1,0 +1,12 @@
+{
+  "name": "statistics-data-entry-app",
+  "displayName": "statistics-data-entry-app",
+  "expo": {
+    "name": "statistics-data-entry-app",
+    "slug": "statistics-data-entry-app",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
