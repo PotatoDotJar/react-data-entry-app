@@ -1,5 +1,16 @@
 const Customer = require("../models/customer.model");
 
+// Get new customer obj
+exports.new = (req, res) => {
+	let newCustomer = new Customer({
+		email: "",
+		name: "",
+		active: true
+	});
+
+	res.send(newCustomer);
+}
+
 // Create and Save a new Customer
 exports.create = (req, res) => {
 	// Validate request
@@ -51,7 +62,7 @@ exports.findOne = (req, res) => {
 				});
 			} else {
 				res.status(500).send({
-					message: "Error retrieving Customer with id " + req.params.customerId
+					message: `Error retrieving Customer with id ${req.params.customerId}.`
 				});
 			}
 		} else {
@@ -100,7 +111,7 @@ exports.delete = (req, res) => {
 				});
 			} else {
 				res.status(500).send({
-					message: "Could not delete Customer with id " + req.params.customerId
+					message: `Could not delete Customer with id ${req.params.customerId}.`
 				});
 			}
 		} else {
