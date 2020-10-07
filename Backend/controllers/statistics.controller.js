@@ -19,19 +19,34 @@ exports.create = (req, res) => {
 		});
 	}
 
+	let entryDateTime = moment();
+	let wakeUpTime = moment(req.body.wakeUpDateTime);
+	wakeUpTime.set({
+		'year': entryDateTime.get('year'),
+		'month': entryDateTime.get('month'),
+		'date': entryDateTime.get('date')
+	});
+	
+
 	const statistic = new Statistic({
 		isWorkDay: req.body.isWorkDay,
 		// Format dates in MySQL format
-		wakeUpDateTime: moment(req.body.wakeUpDateTime).format("YYYY-MM-DD HH:mm:ss"),
-		entryDateTime: moment(req.body.entryDateTime).format("YYYY-MM-DD HH:mm:ss"),
+		wakeUpDateTime: wakeUpTime.format("YYYY-MM-DD HH:mm:ss"),
+		entryDateTime: entryDateTime.format("YYYY-MM-DD HH:mm:ss"),
 		notes: req.body.notes
 	});
 
 	Statistic.create(statistic, (err, data) => {
 		if (err) {
-			res.status(500).send({
-				message: err.message || "Some error occurred while creating the Statistic."
-			});
+			if (err.kind === "already_created") {
+				res.status(400).send({
+					message: "An entry has already been submitted today."
+				});
+			} else {
+				res.status(500).send({
+					message: err.message || "Some error occurred while creating the Statistic."
+				});
+			}
 		} else {
 			res.send(data);
 		}

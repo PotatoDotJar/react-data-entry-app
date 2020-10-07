@@ -1,6 +1,6 @@
 const sql = require("./db");
 
-const Statistic = function(statistic) {
+const Statistic = function (statistic) {
 	this.isWorkDay = statistic.isWorkDay;
 	this.wakeUpDateTime = statistic.wakeUpDateTime;
 	this.entryDateTime = statistic.entryDateTime;
@@ -8,15 +8,33 @@ const Statistic = function(statistic) {
 };
 
 Statistic.create = (newStatistic, result) => {
-	sql.query("INSERT INTO statistics SET ?", newStatistic, (err, res) => {
+
+	// Check if entry has been submitted today
+	//already_created
+	sql.query(
+		"SELECT id, DATE(entryDateTime) FROM statistics WHERE DATE(entryDateTime) = CURDATE()",
+	(err, res) => {
 		if (err) {
 			console.error("Error: ", err);
-      		result(err, null);
-      		return;
+			result(err, null);
+			return;
 		}
-
-		console.log("Added new statistic: ", { id: res.insertId, ...newStatistic });
-		result(null, { id: res.insertId, ...newStatistic });
+	
+		if (res.length) {
+			result({ kind: "already_created" }, null);
+			return;
+		} else {
+			sql.query("INSERT INTO statistics SET ?", newStatistic, (err, res) => {
+				if (err) {
+					console.error("Error: ", err);
+					result(err, null);
+					return;
+				}
+		
+				console.log("Added new statistic: ", { id: res.insertId, ...newStatistic });
+				result(null, { id: res.insertId, ...newStatistic });
+			});
+		}
 	});
 };
 
@@ -27,16 +45,15 @@ Statistic.findById = (statisticId, result) => {
 			result(err, null);
 			return;
 		}
-	
+
 		if (res.length) {
 			console.log("Found statistic: ", res[0]);
 			result(null, res[0]);
 			return;
 		}
-	
-		// Not found Customer with the id
+
 		result({ kind: "not_found" }, null);
-	  });
+	});
 };
 
 Statistic.getAll = result => {
@@ -46,7 +63,7 @@ Statistic.getAll = result => {
 			result(null, err);
 			return;
 		}
-	
+
 		console.log("Statistics: ", res);
 		result(null, res);
 	});
@@ -64,7 +81,6 @@ Statistic.updateById = (id, statistic, result) => {
 			}
 
 			if (res.affectedRows == 0) {
-				// Not found Customer with the id
 				result({ kind: "not_found" }, null);
 				return;
 			}
@@ -82,13 +98,12 @@ Statistic.remove = (id, result) => {
 			result(null, err);
 			return;
 		}
-	
+
 		if (res.affectedRows == 0) {
-			// Not found Customer with the id
 			result({ kind: "not_found" }, null);
 			return;
 		}
-	
+
 		console.log("Deleted statistic with id: ", id);
 		result(null, res);
 	});
