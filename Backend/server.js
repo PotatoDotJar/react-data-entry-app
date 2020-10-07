@@ -14,7 +14,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-require("./routes/customer.routes.js")(app);
+require("./routes/customer.routes")(app);
+require("./routes/statistics.routes")(app);
 
 app.listen(SERVER_PORT, () => {
 	console.log("Server running on port " + SERVER_PORT);
