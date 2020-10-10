@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 
 
@@ -6,6 +7,9 @@ const app = express();
 
 // Settings
 const SERVER_PORT = 3000;
+
+// Use cors
+app.use(cors());
 
 // Parse requests with content-type: application/json
 app.use(bodyParser.json());

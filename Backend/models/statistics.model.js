@@ -39,7 +39,7 @@ Statistic.create = (newStatistic, result) => {
 
 Statistic.wasSubmittedToday = result => {
 	sql.query(
-		"SELECT id, DATE(entryDateTime) AS date FROM statistics WHERE DATE(entryDateTime) = CURDATE()",
+		`SELECT id, entryDateTime, wakeUpDateTime, isWorkDay, notes FROM statistics WHERE DATE(entryDateTime) = CURDATE()`,
 	(err, res) => {
 		if (err) {
 			console.error("Error: ", err);

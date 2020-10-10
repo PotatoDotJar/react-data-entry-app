@@ -1,0 +1,14 @@
+.displayGrid, 
+.displayGrid th, 
+.displayGrid td {
+	border: 1px solid black;
+}
+
+.displayGrid th, .displayGrid td {
+	text-align: left;
+	padding: 5px;
+}
+
+.displayGrid tr.highlighted {
+	background-color: yellow;
+}
