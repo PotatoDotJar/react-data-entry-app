@@ -31,9 +31,26 @@ Statistic.create = (newStatistic, result) => {
 					return;
 				}
 		
-				console.log("Added new statistic: ", { id: res.insertId, ...newStatistic });
 				result(null, { id: res.insertId, ...newStatistic });
 			});
+		}
+	});
+};
+
+Statistic.wasSubmittedToday = result => {
+	sql.query(
+		"SELECT id, DATE(entryDateTime) AS date FROM statistics WHERE DATE(entryDateTime) = CURDATE()",
+	(err, res) => {
+		if (err) {
+			console.error("Error: ", err);
+			result(err, null);
+			return;
+		}
+	
+		if (res.length) {
+			result(null, { hasBeenCreated: true, ...res[0] });
+		} else {
+			result(null, { hasBeenCreated: false });
 		}
 	});
 };
@@ -47,7 +64,6 @@ Statistic.findById = (statisticId, result) => {
 		}
 
 		if (res.length) {
-			console.log("Found statistic: ", res[0]);
 			result(null, res[0]);
 			return;
 		}
@@ -64,7 +80,6 @@ Statistic.getAll = result => {
 			return;
 		}
 
-		console.log("Statistics: ", res);
 		result(null, res);
 	});
 };
@@ -85,7 +100,6 @@ Statistic.updateById = (id, statistic, result) => {
 				return;
 			}
 
-			console.log("Updated statistic: ", { id: id, ...statistic });
 			result(null, { id: id, ...statistic });
 		}
 	);
@@ -104,7 +118,6 @@ Statistic.remove = (id, result) => {
 			return;
 		}
 
-		console.log("Deleted statistic with id: ", id);
 		result(null, res);
 	});
 };

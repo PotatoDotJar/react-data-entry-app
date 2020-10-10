@@ -27,7 +27,6 @@ exports.create = (req, res) => {
 		'date': entryDateTime.get('date')
 	});
 	
-
 	const statistic = new Statistic({
 		isWorkDay: req.body.isWorkDay,
 		// Format dates in MySQL format
@@ -47,6 +46,18 @@ exports.create = (req, res) => {
 					message: err.message || "Some error occurred while creating the Statistic."
 				});
 			}
+		} else {
+			res.send(data);
+		}
+	});
+};
+
+exports.submittedToday = (req, res) => {
+	Statistic.wasSubmittedToday((err, data) => {
+		if (err) {
+			res.status(500).send({
+				message: err.message || "Some error occurred while checking if a statistic was submitted today."
+			});
 		} else {
 			res.send(data);
 		}
