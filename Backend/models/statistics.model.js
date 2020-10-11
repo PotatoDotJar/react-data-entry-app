@@ -9,6 +9,7 @@ const Statistic = function (statistic) {
 
 Statistic.create = (newStatistic, result) => {
 
+	console.log(newStatistic)
 	// Check if entry has been submitted today
 	//already_created
 	sql.query(
@@ -46,7 +47,6 @@ Statistic.wasSubmittedToday = result => {
 			result(err, null);
 			return;
 		}
-	
 		if (res.length) {
 			result(null, { hasBeenCreated: true, ...res[0] });
 		} else {
@@ -79,6 +79,8 @@ Statistic.getAll = result => {
 			result(null, err);
 			return;
 		}
+
+		console.log(res);
 
 		result(null, res);
 	});

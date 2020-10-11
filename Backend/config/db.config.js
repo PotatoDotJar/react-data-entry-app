@@ -1,6 +1,7 @@
 module.exports = {
-	HOST: "mysql.homeserver.local",
-	USER: "statistics-data-entry",
-	PASSWORD: "12345678",
-	DATABASE: "statistics-data-entry"
+	host: "mysql.homeserver.local",
+	user: "statistics-data-entry",
+	password: "12345678",
+	database: "statistics-data-entry",
+	timezone: "Z"
 };

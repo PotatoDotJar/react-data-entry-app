@@ -1,11 +1,12 @@
 const moment = require("moment");
+const { commit } = require("../models/db");
 const Statistic = require("../models/statistics.model");
 
 exports.new = (req, res) => {
 	let newStatistic = new Statistic({
 		isWorkDay: false,
-		wakeUpDateTime: new Date(),
-		entryDateTime: new Date(),
+		wakeUpDateTime: moment().utc(),
+		entryDateTime: moment().utc(),
 		notes: ""
 	});
 
@@ -19,8 +20,12 @@ exports.create = (req, res) => {
 		});
 	}
 
-	let entryDateTime = moment();
-	let wakeUpTime = moment(req.body.wakeUpDateTime);
+	let entryDateTime = moment().utc();
+	let wakeUpTime = moment(req.body.wakeUpDateTime).utc();
+
+	console.log(entryDateTime);
+	console.log(wakeUpTime);
+
 	wakeUpTime.set({
 		'year': entryDateTime.get('year'),
 		'month': entryDateTime.get('month'),
@@ -29,7 +34,7 @@ exports.create = (req, res) => {
 	
 	const statistic = new Statistic({
 		isWorkDay: req.body.isWorkDay,
-		// Format dates in MySQL format
+		// Format dates in UTC MySQL format
 		wakeUpDateTime: wakeUpTime.format("YYYY-MM-DD HH:mm:ss"),
 		entryDateTime: entryDateTime.format("YYYY-MM-DD HH:mm:ss"),
 		notes: req.body.notes

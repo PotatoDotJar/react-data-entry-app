@@ -12,3 +12,9 @@
 .displayGrid tr.highlighted {
 	background-color: yellow;
 }
+
+
+.entryInfo textarea {
+	width: 50%;
+	resize: vertical;
+}

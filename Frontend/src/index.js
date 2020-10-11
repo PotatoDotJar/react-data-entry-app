@@ -17,10 +17,17 @@ class Application extends React.Component {
 			hasGotStatus: false,
 			logStatus: null
 		};
+
+		this.checkLog = this.checkLog.bind(this);
+		this.submitLog = this.submitLog.bind(this);
 	}
 
 	// Make ajax calls here
 	componentDidMount() {
+		this.checkLog();
+	}
+
+	checkLog() {
 		var that = this;
 
 		// Check if user has logged their status today
@@ -40,6 +47,27 @@ class Application extends React.Component {
 			});
 	}
 
+	submitLog(data) {
+		var that = this;
+
+		axios.post(`${config.SERVER_URL}/statistics`, data)
+			.then(function (response) {
+				alert("Submitted!");
+
+				// Clear status
+				that.setState({
+					hasGotStatus: false,
+					logStatus: null
+				}, function() {
+					this.checkLog();
+				});
+			})
+			.catch(function (error) {
+				// handle error
+				console.error(error);
+			});
+	}
+
 	render() {
 		let currentScreen;
 		let currDayEntry = this.state.logStatus;
@@ -49,7 +77,7 @@ class Application extends React.Component {
 			if(currDayEntry.hasBeenCreated) {
 				currentScreen = <StatusScreen entry={currDayEntry} currDayId={currDayEntry.id} />;
 			} else {
-				currentScreen = <EntryScreen />;
+				currentScreen = <EntryScreen submitLog={this.submitLog} />;
 			}
 		} else {
 			currentScreen = <LoadingScreen />;
