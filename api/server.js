@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors");
+const path = require('path');
 const bodyParser = require("body-parser");
 
 
@@ -8,14 +8,13 @@ const app = express();
 // Settings
 const SERVER_PORT = 3001;
 
-// Use cors
-app.use(cors());
-
 // Parse requests with content-type: application/json
 app.use(bodyParser.json());
 
 // Parse requests of content-type: application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static(path.resolve('build')));
 
 // Routes
 require("./routes/customer.routes")(app);
