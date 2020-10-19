@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 // Settings
-const SERVER_PORT = 3001;
+const SERVER_PORT = process.env.PORT || 3001;
 
 // Parse requests with content-type: application/json
 app.use(bodyParser.json());
@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // Parse requests of content-type: application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static(path.resolve('build')));
+app.use(express.static(path.join(__dirname, '../react-app/build')));
 
 // Routes
 require("./routes/customer.routes")(app);
