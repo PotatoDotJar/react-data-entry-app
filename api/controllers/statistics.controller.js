@@ -23,9 +23,6 @@ exports.create = (req, res) => {
 	let entryDateTime = moment().utc();
 	let wakeUpTime = moment(req.body.wakeUpTime).utc();
 
-	console.log(entryDateTime);
-	console.log(wakeUpTime);
-
 	wakeUpTime.set({
 		'year': entryDateTime.get('year'),
 		'month': entryDateTime.get('month'),

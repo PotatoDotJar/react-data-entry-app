@@ -19,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../react-app/build')));
 
 // Routes
-require("./routes/customer.routes")(app);
 require("./routes/statistics.routes")(app);
 
 app.listen(SERVER_PORT, () => {

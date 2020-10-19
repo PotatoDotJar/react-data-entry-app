@@ -77,8 +77,6 @@ Statistic.getAll = result => {
 			return;
 		}
 
-		console.log(res);
-
 		result(null, res);
 	});
 };
