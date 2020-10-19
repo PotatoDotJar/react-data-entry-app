@@ -8,10 +8,7 @@ const Statistic = function (statistic) {
 };
 
 Statistic.create = (newStatistic, result) => {
-
-	console.log(newStatistic)
 	// Check if entry has been submitted today
-	//already_created
 	sql.query(
 		"SELECT id, DATE(entryDateTime) FROM statistics WHERE DATE(entryDateTime) = CURDATE()",
 	(err, res) => {
@@ -73,7 +70,7 @@ Statistic.findById = (statisticId, result) => {
 };
 
 Statistic.getAll = result => {
-	sql.query("SELECT * FROM statistics", (err, res) => {
+	sql.query("SELECT * FROM statistics ORDER BY entryDateTime DESC", (err, res) => {
 		if (err) {
 			console.error("Error: ", err);
 			result(null, err);

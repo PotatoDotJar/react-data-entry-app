@@ -1,8 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import axios from 'axios';
-
-import config from '../config/appSettings.json';
+import axios from '../utilities/AxiosCustom';
 
 // Grid of records
 class DisplayGrid extends React.Component {
@@ -11,17 +9,16 @@ class DisplayGrid extends React.Component {
 		this.state = {
 			gridData: []
 		};
+		
+		this.deleteLog = this.deleteLog.bind(this);
 	}
 
 	componentDidMount() {
 		var that = this;
 
 		// Check if user has logged their status today
-		axios.get(`${config.SERVER_URL}/statistics`)
+		axios.get("/statistics")
 			.then(function (response) {
-				// handle success
-				console.log(response);
-
 				that.setState({ gridData: response.data });
 			})
 			.catch(function (error) {
@@ -30,22 +27,27 @@ class DisplayGrid extends React.Component {
 			});
 	}
 
+	deleteLog(id) {
+		this.props.deleteLog(id);
+	}
+
 	render() {
 		const tableData = this.state.gridData;
 		const currDayId = this.props.currDayId;
 
 		return (
-			<table className="displayGrid">
+			<table className="table table-sm">
 				<thead>
 					<tr>
 						<th>ID</th>
 						<th>Entry Date</th>
 						<th>Wake Up Time</th>
-						<th>Did RJ go to work?</th>
+						<th>Work Day</th>
+						<th>Delete</th>
 					</tr>
 				</thead>
 				<tbody>
-					{ tableData.map(entry => <DisplayGridRow key={entry.id} highlighted={entry.id === currDayId} entry={entry} />) }
+					{ tableData.map(entry => <DisplayGridRow key={entry.id} today={entry.id === currDayId} entry={entry} deleteLog={this.deleteLog} />) }
 				</tbody>
 			</table>
 		)
@@ -54,17 +56,18 @@ class DisplayGrid extends React.Component {
 
 // Every grid row
 function DisplayGridRow(props) {
-	const highlighted = props.highlighted;
+	const isToday = props.today;
 
 	const entryDt = moment.utc(props.entry.entryDateTime).local();
 	const wakeUpDt = moment.utc(props.entry.wakeUpDateTime).local();
 
 	return (
-		<tr className={ (highlighted) ? "highlighted" : "" }>
+		<tr className={ (isToday) ? "table-primary" : "" }>
 			<td>{props.entry.id}</td>
 			<td>{entryDt.format('MMM Do YY, h:mm:ss a')}</td>
 			<td>{wakeUpDt.format('h:mm:ss a')}</td>
-			<td><input type="checkbox" disabled checked={props.entry.isWorkDay} /></td>
+			<td>{(props.entry.isWorkDay) ? "Yes" : "No"}</td>
+			<td><button className="btn btn-danger" onClick={() => { props.deleteLog(props.entry.id) }}>Remove</button></td>
 		</tr>
 	)
 }
@@ -77,20 +80,28 @@ export default function StatusScreen(props) {
 
 	return (
 		<div className="statusScreen">
-			<h1>Status</h1>
-			<h3>You've already logged today.</h3>
-			<ul className="entryInfo">
-				<li><strong>ID: </strong>{props.entry.id}</li>
-				<li><strong>Time entered: </strong>{entryDt.format('h:mm:ss a')}</li>
-				<li><strong>Wake up time: </strong>{wakeUpDt.format('h:mm:ss a')}</li>
-				<li><strong>Did RJ go to work? </strong><input type="checkbox" disabled checked={props.entry.isWorkDay} /></li>
-				<li>
-					<strong>Notes: </strong><br />
-					<textarea disabled value={props.entry.notes}></textarea>
-				</li>
-			</ul>
+			<h1>Today's Log</h1>
 
-			<DisplayGrid currDayId={props.currDayId} />
+			<dl>
+				<dt>ID</dt>
+				<dd>{props.entry.id}</dd>
+
+				<dt>Time entered</dt>
+				<dd>{entryDt.format('h:mm:ss a')}</dd>
+
+				<dt>Wake up time</dt>
+				<dd>{wakeUpDt.format('h:mm:ss a')}</dd>
+
+				<dt>Work day</dt>
+				<dd>{(props.entry.isWorkDay) ? "Yes" : "No"}</dd>
+
+				<dt>Notes</dt>
+				<dd>{(props.entry.notes) ? props.entry.notes : "N/A"}</dd>
+			</dl>
+
+			<div className="table-wrap">
+				<DisplayGrid currDayId={props.currDayId} deleteLog={props.deleteLog} />
+			</div>
 		</div>
 	)
 }

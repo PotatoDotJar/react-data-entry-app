@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
+import axios from './utilities/AxiosCustom';
 
-import config from './config/appSettings.json';
+// Styling
 import './style/index.scss';
 
 // Components
@@ -20,6 +20,7 @@ class Application extends React.Component {
 
 		this.checkLog = this.checkLog.bind(this);
 		this.submitLog = this.submitLog.bind(this);
+		this.deleteLog = this.deleteLog.bind(this);
 	}
 
 	// Make ajax calls here
@@ -31,18 +32,14 @@ class Application extends React.Component {
 		var that = this;
 
 		// Check if user has logged their status today
-		axios.get(`${config.SERVER_URL}/statistics/submittedToday`)
+		axios.get("/statistics/submittedToday")
 			.then(function (response) {
-				// handle success
-				console.log(response);
-
 				that.setState({
 					hasGotStatus: true,
 					logStatus: response.data
 				});
 			})
 			.catch(function (error) {
-				// handle error
 				console.error(error);
 			});
 	}
@@ -50,22 +47,44 @@ class Application extends React.Component {
 	submitLog(data) {
 		var that = this;
 
-		axios.post(`${config.SERVER_URL}/statistics`, data)
+		axios.post("/statistics", data)
 			.then(function (response) {
 				alert("Submitted!");
 
-				// Clear status
 				that.setState({
 					hasGotStatus: false,
 					logStatus: null
-				}, function() {
+				}, function () {
 					this.checkLog();
 				});
 			})
 			.catch(function (error) {
-				// handle error
 				console.error(error);
 			});
+	}
+
+	deleteLog(id) {
+		let that = this;
+
+		let confirmed = window.confirm("Are you sure you want to delete?");
+
+		if (confirmed) {
+			axios.delete("/statistics/" + id)
+				.then(function (response) {
+					alert("Entry deleted.");
+
+					that.setState({
+						hasGotStatus: false,
+						logStatus: null
+					}, function () {
+						that.checkLog();
+					});
+
+				})
+				.catch(function (error) {
+					console.error(error);
+				});
+		}
 	}
 
 	render() {
@@ -73,9 +92,9 @@ class Application extends React.Component {
 		let currDayEntry = this.state.logStatus;
 
 		// Screen logic
-		if(currDayEntry !== null) {
-			if(currDayEntry.hasBeenCreated) {
-				currentScreen = <StatusScreen entry={currDayEntry} currDayId={currDayEntry.id} />;
+		if (currDayEntry !== null) {
+			if (currDayEntry.hasBeenCreated) {
+				currentScreen = <StatusScreen entry={currDayEntry} currDayId={currDayEntry.id} deleteLog={this.deleteLog} />;
 			} else {
 				currentScreen = <EntryScreen submitLog={this.submitLog} />;
 			}
@@ -84,7 +103,7 @@ class Application extends React.Component {
 		}
 
 		return (
-			<div className="application">
+			<div className="container pt-3">
 				{currentScreen}
 			</div>
 		);

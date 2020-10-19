@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-
-import TimePicker from 'react-time-picker';
+import Datetime from 'react-datetime';
+import "react-datetime/css/react-datetime.css";
 
 class EntryForm extends React.Component {
 	constructor(props) {
@@ -28,19 +28,8 @@ class EntryForm extends React.Component {
 		});
 	}
 
-	handleTimeChange(time) {
-		console.log(time);
-
-		let wakeUpTime = this.state.wakeUpTime;
-
-		let splitTime = time.split(":");
-		wakeUpTime.hour(parseInt(splitTime[0]));
-		wakeUpTime.minute(parseInt(splitTime[1]));
-		wakeUpTime.second(parseInt(splitTime[2]));
-
-		this.setState({
-			wakeUpTime: wakeUpTime
-		});
+	handleTimeChange(newTime) {
+		this.setState({ wakeUpTime: newTime });
 	}
 
 	handleSubmit(event) {
@@ -48,7 +37,7 @@ class EntryForm extends React.Component {
 
 		let data = {
 			isWorkDay: this.state.isWorkDay,
-			wakeUpTime: this.state.wakeUpTime,
+			wakeUpTime: this.state.wakeUpTime.format(),
 			notes: this.state.notes
 		};
 
@@ -58,37 +47,38 @@ class EntryForm extends React.Component {
 	render() {
 
 		return (
-			<form onSubmit={this.handleSubmit}>
-				<label>
-					Is it a work day for RJ?
-					<input
-						name="isWorkDay"
-						type="checkbox"
-						checked={this.state.isWorkDay}
+			<form className="col-md-6" onSubmit={this.handleSubmit}>
+				<h1 className="h3 mb-3 font-weight-normal text-center">Log Entry</h1>
+				<div className="form-group form-check">
+					<input id="isWorkDay" name="isWorkDay" type="checkbox"
+						className="form-check-input" checked={this.state.isWorkDay}
 						onChange={this.handleInputChange} />
-				</label>
-				<br />
-				<label>
-					Wake Up Time:
-					<TimePicker
+
+					<label htmlFor="isWorkDay" className="form-check-label">
+						Work Day
+					</label>
+				</div>
+				
+				<div className="form-group">
+					<label htmlFor="wakeUpTime">Wake Up Time</label>
+					<Datetime
+						id="wakeUpTime"
 						name="wakeUpTime"
-						maxTime={moment().format("HH:mm:ss")}
-						maxDetail="second"
+						dateFormat={false}
 						required={true}
-						value={this.state.wakeUpTime.format("HH:mm:ss")}
+						value={this.state.wakeUpTime}
 						onChange={this.handleTimeChange} />
-					
-				</label>
-				<br />
-				<label>
-					Notes:
+				</div>	
+				<div className="form-group">
+					<label htmlFor="notes">Notes</label>
 					<textarea
+						className="form-control"
+						id="notes"
 						name="notes"
 						value={this.state.notes}
 						onChange={this.handleInputChange}></textarea>
-					
-				</label>
-				<input type="submit" value="Submit" />
+				</div>
+				<input className="btn btn-primary w-100" type="submit" value="Submit" />
 			</form>
 		)
 	}
@@ -96,8 +86,7 @@ class EntryForm extends React.Component {
 
 export default function EntryScreen(props) {
 	return (
-		<div className="entryScreen">
-			<h1>Log Entry</h1>
+		<div id="entryScreen" className="row justify-content-center">
 			<EntryForm submitLog={props.submitLog} />
 		</div>
 	)

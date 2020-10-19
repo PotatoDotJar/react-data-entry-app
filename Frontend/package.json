@@ -11,10 +11,12 @@
     "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
+    "react-datetime": "^3.0.4",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "react-time-picker": "^4.0.1"
+    "react-time-picker": "^4.0.1",
+    "remove": "^0.1.5"
   },
   "scripts": {
     "start": "react-scripts start",

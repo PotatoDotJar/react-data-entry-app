@@ -1,23 +1,18 @@
 @import '~bootstrap/scss/bootstrap.scss';
 
-
-.displayGrid, 
-.displayGrid th, 
-.displayGrid td {
-	border: 1px solid black;
+html,
+body
+{
+    height: 100%;
 }
 
-.displayGrid th, .displayGrid td {
-	text-align: left;
-	padding: 5px;
-}
-
-.displayGrid tr.highlighted {
-	background-color: yellow;
-}
+.statusScreen {
 
 
-.entryInfo textarea {
-	width: 50%;
-	resize: vertical;
+    .table-wrap {
+        overflow-x: auto;
+        table {
+            min-width: 400px;
+        }
+    }
 }
