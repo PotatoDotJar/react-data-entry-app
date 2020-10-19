@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import config from './config/appSettings.json';
-import './style/index.css';
+import './style/index.scss';
 
 // Components
 import LoadingScreen from './components/LoadingScreen';

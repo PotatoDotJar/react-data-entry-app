@@ -3,7 +3,6 @@ import moment from 'moment';
 import axios from 'axios';
 
 import config from '../config/appSettings.json';
-import '../style/statusScreen.css';
 
 // Grid of records
 class DisplayGrid extends React.Component {

@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 
 import TimePicker from 'react-time-picker';
-import '../style/entryScreen.css';
 
 class EntryForm extends React.Component {
 	constructor(props) {
